@@ -1,0 +1,25 @@
+let
+    Source = #"QA - Source Validation",
+    #"Promoted Headers" = Source,
+    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Package Id", type any}, {"Game", type text}, {"Send Date", type any}, {"Region", type text}, {"Order Status", type text}, {"E-commerce", type text}, {"Stock Quantity", type any}, {"Preço Unit Price", type text}, {"Store Manager", type text}, {"Batch", type text}, {"Age Rating", type text}, {"Publisher", type text}}),
+    #"Removed Blank Rows" = Table.SelectRows(#"Changed Type", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+    #"Trimmed Text" = Table.TransformColumns(Table.TransformColumnTypes(#"Removed Blank Rows", {{"Package Id", type text}}, "en-GB"),{{"Package Id", Text.Trim, type text}}),
+    #"Filtered Rows" = Table.SelectRows(#"Trimmed Text", each [Package ID validation] = "Valid"),
+    #"Replaced Value" = Table.ReplaceValue(#"Filtered Rows","$","",Replacer.ReplaceText,{"Preço Unit Price"}),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Replaced Value",{{"Preço Unit Price", Currency.Type}, {"Stock Quantity", Int64.Type}}),
+    #"Changed Type with Locale" = Table.TransformColumnTypes(#"Changed Type1", {{"Send Date", type date}}, "en-GB"),
+    #"Added Custom" = Table.AddColumn(#"Changed Type with Locale", "Order Value", each [Stock Quantity] * [Preço Unit Price]),
+    #"Reordered Columns" = Table.ReorderColumns(#"Added Custom",{"Package Id", "Game", "Send Date", "Region", "Order Status", "E-commerce", "Stock Quantity", "Preço Unit Price", "Order Value", "Store Manager", "Batch", "Age Rating", "Publisher"}),
+    #"Changed Type2" = Table.TransformColumnTypes(#"Reordered Columns",{{"Order Value", Currency.Type}}),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Changed Type2", "Game", Splitter.SplitTextByEachDelimiter({"-"}, QuoteStyle.Csv, true), {"Game.1", "Game.2"}),
+    #"Changed Type3" = Table.TransformColumnTypes(#"Split Column by Delimiter",{{"Game.1", type text}, {"Game.2", type text}}),
+    #"Renamed Columns" = Table.RenameColumns(#"Changed Type3",{{"Game.1", "Game"}, {"Game.2", "Console"}}),
+    #"Replaced Value1" = Table.ReplaceValue(#"Renamed Columns","EN","England",Replacer.ReplaceText,{"Region"}),
+    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","JP","Japan",Replacer.ReplaceValue,{"Region"}),
+    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","PT","Portugal",Replacer.ReplaceValue,{"Region"}),
+    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","Batch-","",Replacer.ReplaceText,{"Batch"}),
+    #"Renamed Columns1" = Table.RenameColumns(#"Replaced Value4",{{"Publisher", "Publisher Type"}}),
+    #"Reordered Columns1" = Table.ReorderColumns(#"Renamed Columns1",{"Package Id", "Game", "Console", "Send Date", "Region", "Order Status", "E-commerce", "Stock Quantity", "Preço Unit Price", "Order Value", "Store Manager", "Batch", "Age Rating", "Publisher Type"}),
+    #"Filtered Rows1" = Table.SelectRows(#"Reordered Columns1", each true)
+in
+    #"Filtered Rows1"
