@@ -26,14 +26,11 @@ The project reflects both the technical skills I'm developing and the way I enjo
 
 To transform a simulated video-game distribution dataset into a cleaner, reporting-ready dataset while preserving rejected records and creating a transparent, auditable data-quality process.
 
-## Data quality results
+### Reconciliation Results
 
-| Measure | Records |
-|---|---:|
-| Original source | 118 |
-| Accepted for reporting | 109 |
-| Rejected for review | 9 |
-| Unaccounted for | 0 |
+The reconciliation check confirms that all 118 source records have been accounted for: 109 accepted and 9 rejected, with no unaccounted records.
+
+![Data Quality Reconciliation Results](Power_query_project_QA_reconciliation.JPG)
 
 **Reconciliation status: Balanced**
 
@@ -124,18 +121,19 @@ It allowed me to visualise how data flows between queries and distinguish betwee
 
 I disabled loading for intermediate queries that weren't required in the Power BI model, while retaining them as part of the transformation pipeline.
 
-## Query architecture
+### Power Query Dependencies
 
+The diagram below shows how the raw data flows through validation, cleaning, exception reporting and reconciliation.
 
+![Power Query Dependencies Diagram](Power_query_project_query_dependency.JPG)
 
-The architecture separates the source data, validation, accepted records and rejected records while supporting automated reconciliation.
 
 ## Tools and skills developed
 
 **Tools**
 
 - Microsoft Power Query
-- Power Query M language
+- Power Query M language (Basic level)
 - Power BI Desktop (Power Query Editor)
 - Microsoft Excel
 
@@ -160,7 +158,7 @@ These include:
 
 - **Package ID:** Identifiers were expected to contain numbers only.
 - **Region:** The code `EN` was interpreted as England.
-- **Stock Quantity:** This was assumed to represent a quantity suitable for calculating Order Value. That calculation should not be interpreted as recognised revenue without business confirmation.
+- **Stock Quantity:** This was assumed to represent a quantity suitable for calculating Order Value. That calculation should not be interpreted as revenue without business confirmation.
 - **Age Rating:** The meaning and classification system of the supplied ratings would require confirmation.
 - **Publisher:** The dataset distinguishes First Party and Third Party but does not identify individual publishing companies.
 
