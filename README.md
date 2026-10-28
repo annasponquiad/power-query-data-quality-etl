@@ -121,12 +121,29 @@ It allowed me to visualise how data flows between queries and distinguish betwee
 
 I disabled loading for intermediate queries that weren't required in the Power BI model, while retaining them as part of the transformation pipeline.
 
-### Power Query Dependencies
+### Query Architecture
+
+**Power Query Dependencies**
 
 The diagram below shows how the raw data flows through validation, cleaning, exception reporting and reconciliation.
 
 ![Power Query Dependencies Diagram](Power_query_project_query_dependency.JPG)
 
+### Using the Power Query scripts
+
+I've included the Power Query M scripts used to build the cleaning, validation and reconciliation process.
+
+The original Excel file was stored locally on my computer, so I've replaced the file path in the `Raw-SAP-Extract.pq` script with a placeholder:
+
+`C:\PATH\TO\YOUR\DATA\DIO_practice_book2.xlsx`
+
+To use these scripts with the original source file, this path needs to be replaced with the location where the Excel file is saved on your own computer.
+
+The queries also reference one another, so the original query names need to be retained for the pipeline to work correctly.
+
+I've kept the scripts separate so that anyone interested in the project can explore the transformations, validation rules and reconciliation logic without needing to open a Power BI report.
+
+*Please note that the source Excel file is not currently included in this repository.*
 
 ## Tools and skills developed
 
